@@ -65,21 +65,3 @@ exports.update = function (req, res, next) {
   });
   res.send({ result: true });
 };
-exports.show = function (req, res, next) {
-  const bookitem = booklist.find((book) => book.id == req.params.id);
-  if (!req.body.author) {
-    return next(createError(400, "author is required"));
-  }
-  if (!bookitem) {
-    return next(createError(404, "no book with that id"));
-  }
-  booklist = booklist.map((book) => {
-    if (book.id == req.params.id) {
-      book.title = req.body.title;
-      book.author = req.body.author;
-      book.read = req.body.read;
-    }
-    return book;
-  });
-  res.send({ result: true });
-};
