@@ -4,6 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -15,8 +19,11 @@
   "bugs": {
     "url": "https://github.com/smitax21/BookListAPI/issues"
   },
-  "homepage": "https://github.com/smitax21/BookListAPI#readme",
+  "homepage": "https://github.com/smitax21/BookListAPI",
   "dependencies": {
     "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "gh-pages": "^4.0.0"
   }
 }
