@@ -1,3 +1,5 @@
+const createError = require("http-errors");
+
 let booklist = [];
 let idno = 0;
 
@@ -11,8 +13,8 @@ exports.create = function (req, res, next) {
   if (!req.body.author) {
     return next(createError(400, "author is required"));
   }
-  if (!req.body.read != "true") {
-    return alert("book not read");
+  if (!req.body.read == "true") {
+    return next(createError(400, "book not read"));
   }
   booklist.push({
     id: idno,
@@ -23,6 +25,7 @@ exports.create = function (req, res, next) {
   res.send({ result: true });
   idno++;
 };
+
 exports.show = function (req, res, next) {
   const bookitem = booklist.find((book) => book.id == req.params.id);
   if (!bookitem) {
@@ -30,6 +33,7 @@ exports.show = function (req, res, next) {
   }
   res.send(bookitem);
 };
+
 exports.delete = function (req, res, next) {
   const bookitem = booklist.find((book) => book.id == req.params.id);
   if (!bookitem) {
@@ -38,27 +42,44 @@ exports.delete = function (req, res, next) {
   booklist = booklist.filter((book) => book.id != req.params.id);
   res.send({ result: true });
 };
+
 exports.update = function (req, res, next) {
   const bookitem = booklist.find((book) => book.id == req.params.id);
   if (!req.body.title) {
     return next(createError(400, "title is required"));
   }
-  exports.show = function (req, res, next) {
-    const bookitem = booklist.find((book) => book.id == req.params.id);
-    if (!req.body.author) {
-      return next(createError(400, "author is required"));
+  if (!req.body.author) {
+    return next(createError(400, "author is required"));
+  }
+  if (!req.body.read) {
+    return next(createError(400, "read is required"));
+  }
+
+  booklist = booklist.map((book) => {
+    if (book.id == req.params.id) {
+      book.title = req.body.title;
+      book.author = req.body.author;
+      book.read = req.body.read;
     }
-    if (!bookitem) {
-      return next(createError(404, "no book with that id"));
+    return book;
+  });
+  res.send({ result: true });
+};
+exports.show = function (req, res, next) {
+  const bookitem = booklist.find((book) => book.id == req.params.id);
+  if (!req.body.author) {
+    return next(createError(400, "author is required"));
+  }
+  if (!bookitem) {
+    return next(createError(404, "no book with that id"));
+  }
+  booklist = booklist.map((book) => {
+    if (book.id == req.params.id) {
+      book.title = req.body.title;
+      book.author = req.body.author;
+      book.read = req.body.read;
     }
-    booklist = booklist.map((book) => {
-      if (book.id == req.params.id) {
-        book.title = req.body.title;
-        book.author = req.body.author;
-        book.read = req.body.read;
-      }
-      return book;
-    });
-    res.send({ result: true });
-  };
+    return book;
+  });
+  res.send({ result: true });
 };
