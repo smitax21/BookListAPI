@@ -3,9 +3,12 @@ const createError = require("http-errors");
 let booklist = [];
 let idno = 0;
 
+// To get the initial index of books
 exports.index = function (req, res) {
   res.send(booklist);
 };
+
+// To create the book list
 exports.create = function (req, res, next) {
   if (!req.body.title) {
     return next(createError(400, "title is required"));
@@ -26,6 +29,7 @@ exports.create = function (req, res, next) {
   idno++;
 };
 
+// To get the book list after creating
 exports.show = function (req, res, next) {
   const bookitem = booklist.find((book) => book.id == req.params.id);
   if (!bookitem) {
@@ -34,6 +38,7 @@ exports.show = function (req, res, next) {
   res.send(bookitem);
 };
 
+// To delete the booklist with id
 exports.delete = function (req, res, next) {
   const bookitem = booklist.find((book) => book.id == req.params.id);
   if (!bookitem) {
@@ -43,6 +48,7 @@ exports.delete = function (req, res, next) {
   res.send({ result: true });
 };
 
+// To update the booklist with id
 exports.update = function (req, res, next) {
   const bookitem = booklist.find((book) => book.id == req.params.id);
   if (!req.body.title) {
